@@ -1,14 +1,20 @@
 import { NavigationContainer } from "@react-navigation/native";
 import Screens from "./Screens";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { Provider } from "react-redux";
+import configureStore from "./store";
+
+const store = configureStore();
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <Screens />
-      </NavigationContainer>
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <Screens />
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
   );
 }
 
