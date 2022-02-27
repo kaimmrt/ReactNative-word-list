@@ -1,10 +1,39 @@
-import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { Icon, Divider } from "react-native-elements";
+import {
+  Text,
+  FlatList,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { AppState } from "../store";
+import { Word } from "../store/word/models";
+import { bindActionCreators, Dispatch } from "redux";
+import { connect } from "react-redux";
+import { sendWord, deleteWord } from "../store/word/action";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/RootStackParamsList";
 
-const Home = () => {
+const mapStateToProps = (state: AppState) => ({
+  word: state.word,
+  // otherReducer: state.otherReducer,
+});
+
+// const mapDispatchToProps = (dispatch: Dispatch) =>
+//   bindActionCreators({ sendWord, deleteWord }, dispatch);
+
+type AppProps = ReturnType<typeof mapStateToProps>;
+// ReturnType<typeof mapDispatchToProps>;
+
+type homeScreenProp = StackNavigationProp<RootStackParamList, "Home">;
+
+const Home: React.FC<AppProps> = (props: AppProps) => {
+  const navigation = useNavigation<homeScreenProp>();
+
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <View style={{ backgroundColor: "white", flex: 1 }}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Kelime Defterim</Text>
         <View style={{ display: "flex", flexDirection: "row" }}>
@@ -14,27 +43,15 @@ const Home = () => {
       </View>
       <Divider style={{ marginBottom: 10 }} />
       <FlatList
-        data={[
-          { key: "Devin" },
-          { key: "Dan" },
-          { key: "Dominic" },
-          { key: "Jackson" },
-          { key: "James" },
-          { key: "Joel" },
-          { key: "John" },
-          { key: "Jillian" },
-          { key: "Jimmy" },
-          { key: "Julie" },
-          { key: "Mert" },
-          { key: "Metin" },
-          { key: "Miraç" },
-          { key: "Ahmet" },
-          { key: "Mehmet" },
-          { key: "Yavuz" },
-        ]}
+        data={props.word.words}
         renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <View style={styles.listItemLeftDivider} />
+          <View key={item.timestamp} style={styles.listItem}>
+            <View
+              style={{
+                ...styles.listItemLeftDivider,
+                backgroundColor: item.color,
+              }}
+            />
             <View
               style={{
                 display: "flex",
@@ -45,17 +62,35 @@ const Home = () => {
               }}
             >
               <View>
-                <Text style={styles.wordtTitle}>{item.key}</Text>
-                <Text style={styles.subTitle}>lorem ipsum</Text>
+                <Text style={styles.wordtTitle}>{item.word}</Text>
+                <Text style={styles.subTitle}>{item.mean}</Text>
               </View>
-              <Text>isim</Text>
+              <Text>{item.type}</Text>
             </View>
           </View>
         )}
       />
+      <TouchableOpacity
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 25,
+          backgroundColor: "blue",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "absolute",
+          right: 20,
+          bottom: 30,
+        }}
+        onPress={() => navigation.navigate("AddWord")}
+      >
+        <Text>Ekle</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+export default connect(mapStateToProps)(Home);
 
 const styles = StyleSheet.create({
   listItem: {
@@ -95,5 +130,3 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
-export default Home;

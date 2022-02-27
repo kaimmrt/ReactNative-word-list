@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import Screens from "./Screens";
+import Screens from "./navigation/Screens";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { Provider } from "react-redux";
 import configureStore from "./store";

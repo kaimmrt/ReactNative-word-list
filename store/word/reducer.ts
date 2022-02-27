@@ -11,6 +11,7 @@ export function WordReducer(
 ): WordList {
   switch (action.type) {
     case SEND_WORD:
+      console.log(action.payload);
       return {
         words: [...state.words, action.payload],
       };
